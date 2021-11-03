@@ -18,20 +18,29 @@
  */
 const isUnique = (str) => {
 
-    let check = 0; // cumulative bitwise OR of all characters. It's 32 bits in JS, more than enough
+    let bigger_check = 0; // cumulative bitwise OR of all characters. It's 32 bits in JS, more than enough
+    let lower_check = 0;
     for (let i = 0; i < str.length; i++) {
         const char = str.charAt(i);
-        const charIndex = char.charCodeAt(0);
-        // if ((check & (1 << charIndex)) > 0) {
-        if ((check & (1 * (charIndex * 2))) > 0) { // *2 is equivalent to shift one position left, but faster
-            return false;
-        }
+        // const charIndex = char.charCodeAt(0) - '0'.charCodeAt(0); // max 49 bits difference more than javascript integer
+        const charIndex = allowedChars.indexOf(char);
+        if (charIndex >= 31)  { // int size in JS
+            if ((bigger_check & (1 << charIndex-31)) > 0) {
+                return [false, str];
+            }
 
-        // check |= (1 << charIndex);
-        check |= (1 * (charIndex*2)); // *2 is equivalent to shift one position left, but faster
+            bigger_check |= (1 << charIndex-31);
+        } else {
+
+            if ((lower_check & (1 << charIndex)) > 0) {
+                return [false, str];
+            }
+
+            lower_check |= (1 << charIndex);
+        }
     }
 
-    return true;
+    return [true, str];
 }
 
 const isUniqueNoAddictionalStructures = (str) => {
@@ -41,14 +50,16 @@ const isUniqueNoAddictionalStructures = (str) => {
     for(let i = 0; i < str.length; i++) {
         const char = str.charAt(i);
         for(let j = i + 1; j < str.length; j++) {
-            if (char === str.charAt(j)) return false;
+            if (char === str.charAt(j)) {
+                return [false, str];
+            }
         }
     }
 
-    return true;
+    return [true, str];
 }
 
-const allowedChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+const allowedChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; //62 chars
 
 // testing functions:
 const getRandomString = (length) => {
@@ -56,14 +67,15 @@ const getRandomString = (length) => {
     for ( let i = 0; i < length; i++ ) {
         result += allowedChars.charAt(Math.floor(Math.random() * allowedChars.length));
     }
+
     return result;
 }
 
 const generateRandomTestingBenchData = () => {
-    const stringCounter = 100000;
+    const stringCounter = 1000;
     const data = [];
     for (let index = 0; index < stringCounter; index++) {
-        data[index] = getRandomString(100);
+        data[index] = getRandomString(10);
     }
     return data;
 }
@@ -116,8 +128,8 @@ const performaceSensitiveFunc = () => {
         const elem1 = resultIsUnique[i];
         const elem2 = resultIsUniqueNoAddictionalStructures[i];
 
-        if (elem1 !== elem2) {
-            console.log(`ERROR in index ${i}!!: First string from isUnique has duplicated is: ${elem1}. Second one from isUniqueNoAddictionalStructures is: ${elem2}`);
+        if (elem1[0] !== elem2[0]) {
+            console.log(`ERROR in index ${i}!!: First string from isUnique has duplicated is: ${elem1[0]}-${elem1[1]}. Second one from isUniqueNoAddictionalStructures is: ${elem2[0]}-${elem2[1]}`);
         }
     }
 }
