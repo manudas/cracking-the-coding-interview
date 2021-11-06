@@ -6,8 +6,8 @@
  *
  */
 
-const allowedChars = 'ABCDE'; // 62 chars
-// const allowedChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; // 62 chars
+// const allowedChars = 'ABCDE'; // 62 chars
+const allowedChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; // 62 chars
 
 const checkPermutation = (str1, str2) => {
     if (str1.length != str2.length) return false;

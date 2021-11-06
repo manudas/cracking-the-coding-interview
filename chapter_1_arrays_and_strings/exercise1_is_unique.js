@@ -18,11 +18,11 @@
  */
 const isUnique = (str) => {
 
-    let bigger_check = 0; // cumulative bitwise OR of all characters. It's 32 bits in JS, more than enough
+    let bigger_check = 0; // 32 bits (decimal 64 bits without fraction)
     let lower_check = 0;
     for (let i = 0; i < str.length; i++) {
         const char = str.charAt(i);
-        // const charIndex = char.charCodeAt(0) - '0'.charCodeAt(0); // max 49 bits difference more than javascript integer
+        // const charIndex = char.charCodeAt(0) - '0'.charCodeAt(0); // max 49 bits difference more than javascript integer (decimal without fraction)
         const charIndex = allowedChars.indexOf(char);
         if (charIndex >= 31)  { // int size in JS
             if ((bigger_check & (1 << charIndex-31)) > 0) {
