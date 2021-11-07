@@ -59,4 +59,3 @@ strBenchArr.forEach(([str1, str2]) => {
         console.error(`Error in compression of ${str1}. Returned ${compressionResult} but expected ${str2}`);
     }
 });
-
