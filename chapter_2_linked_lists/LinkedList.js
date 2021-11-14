@@ -25,12 +25,12 @@ class LinkedList {
         for (let i = 0; i < cloned.list.length; i++) {
             cloned.list[i].next = cloned.list[i+1] ? cloned.list[i+1] : null;
         }
-        cloned.head = cloned.list[0] ? cloned.list[0] : nll;
+        cloned.head = cloned.list[0] ? cloned.list[0] : null;
         cloned.size = list.size;
 
         return cloned;
     }
-    0
+
     constructor()
     {
         this.list = null;

@@ -41,7 +41,7 @@ const KthToLastIterative = (node, k) => {
 
 const KthToLast = (list, k, recursive = true) => {
     if (recursive) {
-        const node = KthToLastRecursive(list.head, k, recursive);
+        const node = KthToLastRecursive(list.head, k);
         return (isNaN(node) ? node : null);
     }
     return KthToLastIterative(list.head, k);
