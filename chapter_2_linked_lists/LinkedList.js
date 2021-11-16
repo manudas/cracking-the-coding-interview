@@ -187,4 +187,15 @@ class LinkedList {
     toArray() {
         return this.list;
     }
+
+    syncInternalStorage() {
+        let node = this.head;
+        let index = 0;
+        while (node !== null) {
+            this.list[index] = node;
+            node = node.next;
+            index++;
+        }
+        this.list.length = index;
+    }
 }
