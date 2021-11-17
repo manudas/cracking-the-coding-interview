@@ -175,9 +175,9 @@ class LinkedList {
             str += this.list[i].element + " ";
         }
         if (returnString) {
-            return str;
+            return str.trim();
         }
-        console.log(str);
+        console.log(str.trim());
     }
 
     /**
