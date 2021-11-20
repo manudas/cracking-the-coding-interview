@@ -50,10 +50,10 @@ class LinkedList {
      * Adds a new element to the list
      * @param {any} element
      */
-    add(element)
+    add(element, isNode = false)
     {
         // creates a new node
-        const node = new Node(element);
+        const node = !isNode ? new Node(element) : element;
 
         // if list is Empty add the
         // element and make it head
@@ -178,14 +178,16 @@ class LinkedList {
      */
     printList(returnString = false)
     {
-        let str = '';
+        let str = '[';
         for (let i = 0; i < this.size; i++) {
             str += this.list[i].element + " ";
         }
+        str = str.trim();
+        str += ']';
         if (returnString) {
-            return str.trim();
+            return str;
         }
-        console.log(str.trim());
+        console.log(str);
     }
 
     /**
