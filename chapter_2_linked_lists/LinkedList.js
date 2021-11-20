@@ -31,6 +31,14 @@ class LinkedList {
         return cloned;
     }
 
+    static fromArray(arr = []) {
+        const list = new LinkedList();
+        for (let i = 0; i < arr.length; i++) {
+            list.add(arr[i]);
+        }
+        return list;
+    }
+
     constructor()
     {
         this.list = null;
@@ -171,7 +179,7 @@ class LinkedList {
     printList(returnString = false)
     {
         let str = '';
-        for (let i = 0; i < this.list.length; i++) {
+        for (let i = 0; i < this.size; i++) {
             str += this.list[i].element + " ";
         }
         if (returnString) {
