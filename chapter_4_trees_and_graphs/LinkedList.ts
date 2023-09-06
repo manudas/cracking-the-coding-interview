@@ -1,5 +1,7 @@
-class Node {
-    constructor(element)
+export class Node<T> {
+    public element: T
+    public next: Node<T> | null
+    constructor(element: T)
     {
         this.element = element;
         this.next = null
@@ -7,17 +9,17 @@ class Node {
 }
 
 /**
- * Implementing LinedList in JS
+ * Implementing LinedList in TS
  * using an underlying array to
  * store it, as is the most
  * performance-efficient way, as
  * in Java with ArrayList
  */
-export class LinkedList {
+export class LinkedList<T> {
 
     static clone(list) {
         const cloned = new LinkedList();
-        cloned.list = Array.from(list.list, (node) => {
+        cloned.list = Array.from(list.list, (node: Node<unknown>) => {
             const clonedNode = new Node(node.element);
             return clonedNode;
         });
@@ -38,6 +40,10 @@ export class LinkedList {
         return list;
     }
 
+    list: Array<Node<T>> | null
+    head: Node<T> | null
+    size: number
+
     constructor()
     {
         this.list = null;
@@ -49,10 +55,10 @@ export class LinkedList {
      * Adds a new element to the list
      * @param {any} element
      */
-    add(element, isNode = false)
+    add(element: Node<T> | T)
     {
         // creates a new node
-        const node = !isNode ? new Node(element) : element;
+        const node = !(element instanceof Node) ? new Node(element) : element;
 
         // if list is Empty add the
         // element and make it head
@@ -60,8 +66,8 @@ export class LinkedList {
             this.list = [node];
             this.head = node;
         } else {
-            this.list[this.list.length - 1].next = node
-            this.list.push(node);
+            this.list![this.list!.length - 1].next = node
+            this.list!.push(node);
         }
         this.size++;
     }
@@ -73,16 +79,16 @@ export class LinkedList {
      * @param {any} element
      * @param {Number} index
      */
-    insertAt(element, index)
+    insertAt(element: Node<T> | T, index: number)
     {
         if (index < 0 || index > this.size) {
             console.log("Please enter a valid index.");
         } else {
             // creates a new node
-            const node = new Node(element);
+            const node = !(element instanceof Node) ? new Node(element) : element;
 
-            const previous = this.list[index - 1] ? this.list[index -1] : null; // first element?
-            const next = this.list[index + 1] ? this.list[index + 1] : null; // last element?
+            const previous = this.list![index - 1] ? this.list![index -1] : null; // first element?
+            const next = this.list![index + 1] ? this.list![index + 1] : null; // last element?
 
             if (previous) { // is not the first element
                 previous.next = node;
@@ -94,7 +100,7 @@ export class LinkedList {
             }
 
             // splice(startPoint, deleteCount, addedElement)
-            this.list.splice(index, 0, node);
+            this.list!.splice(index, 0, node);
 
             this.size++;
         }
@@ -106,19 +112,19 @@ export class LinkedList {
      * @param {Number} index
      * @returns {any} The removed element
      */
-    removeFrom(index)
+    removeFrom(index: number)
     {
         if (index < 0 || index >= this.size) {
             console.log("Please Enter a valid index");
         } else {
-            const previous = this.list[index - 1] ? this.list[index -1] : null; // first element?
-            const next = this.list[index + 1] ? this.list[index + 1] : null; // last element?
+            const previous = this.list![index - 1] ? this.list![index -1] : null; // first element?
+            const next = this.list![index + 1] ? this.list![index + 1] : null; // last element?
 
             if (previous) previous.next = next; // not the first element
             else this.head = next; // first element
 
             // splice(startPoint, deleteCount, addedElement)
-            const [node] = this.list.splice(index, 1);
+            const [node] = this.list!.splice(index, 1);
 
             this.size--;
 
@@ -149,7 +155,7 @@ export class LinkedList {
      * @param {any} element
      * @returns the removed element, -1 otherwise
      */
-    removeElement(element)
+    removeElement(element: T)
     {
         const elementIndex = this.indexOf(element);
         if (elementIndex !== -1) {
@@ -164,9 +170,9 @@ export class LinkedList {
      * @param {any} element
      * @returns the index of the element, -1 if not found
      */
-    indexOf(element)
+    indexOf(element: T)
     {
-        return this.list.findIndex(node => node.element === element);
+        return this.list?.findIndex(node => node.element === element) ?? -1;
     }
 
     /**
@@ -193,7 +199,7 @@ export class LinkedList {
     {
         let str = '[';
         for (let i = 0; i < this.size; i++) {
-            str += this.list[i].element + " ";
+            str += this.list![i].element + " ";
         }
         str = str.trim();
         str += ']';
@@ -215,10 +221,10 @@ export class LinkedList {
         let node = this.head;
         let index = 0;
         while (node !== null) {
-            this.list[index] = node;
+            this.list![index] = node;
             node = node.next;
             index++;
         }
-        this.list.length = index;
+        this.list!.length = index;
     }
 }
