@@ -1,0 +1,20 @@
+{
+  "name": "cracking-the-coding-interview",
+  "version": "1.0.0",
+  "description": "Cracking the coding interview solutions in both JavaScript and Kotlin",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:debug": "node --nolazy --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --colors --verbose"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/preset-env": "^7.22.14",
+    "@babel/preset-typescript": "^7.22.15",
+    "@types/jest": "^29.5.4",
+    "babel-jest": "^29.6.4",
+    "jest": "^29.6.4"
+  }
+}
