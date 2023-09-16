@@ -1,5 +1,5 @@
 import { isConnected } from '../exercise1_route_between_nodes';
-import { Graph, GraphNode } from "../Graph"
+import { GraphNode } from "../Graph"
 import { LinkedList } from '../LinkedList'
 
 describe('Cracking the coding interview: Trees and graphs, exercise 1: route between nodes', () => {
@@ -31,26 +31,26 @@ describe('Cracking the coding interview: Trees and graphs, exercise 1: route bet
         firstChildList.add(unconnectedFirstLevelNode)
         firstChildList.add(unconnectedFirstLevelNode2)
         // ROOT
-        testingGraph = new Graph(new GraphNode('root', firstChildList))
+        testingGraph = new GraphNode('root', firstChildList)
 
         // LOOPS AND OTHER CONNECTIONS?
         // CURRENT CONNECTIONS: root->firstlevel->secondlevel->thirdlevel
 
         // let's connect thirdlevel with root and secondlevel with firstlevel
         // third level with root
-        thirdLevelGraph.children?.add(testingGraph.root)
+        thirdLevelGraph.children?.add(testingGraph)
 
         // secondlevel with first level
         connectedSecondLevelNode2.children?.add(unconnectedFirstLevelNode2)
     })
 
     test('root is connected with third level', () => {
-        expect(isConnected(testingGraph, testingGraph.root, thirdLevelGraph)).toBe(true)
+        expect(isConnected(testingGraph, testingGraph, thirdLevelGraph)).toBe(true)
     })
 
     test('second child of root node is not connected with root', () => {
         // is a directed graph so root is connected to second level unconnected but not the other way around
-        expect(isConnected(testingGraph, unconnectedSecondLevelNode, testingGraph.root)).toBe(false);
+        expect(isConnected(testingGraph, unconnectedSecondLevelNode, testingGraph)).toBe(false);
 
     })
 });

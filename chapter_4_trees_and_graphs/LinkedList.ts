@@ -6,6 +6,10 @@ export class Node<T> {
         this.element = element;
         this.next = null
     }
+
+    toString() {
+        return String(this.element)
+    }
 }
 
 /**
@@ -15,47 +19,66 @@ export class Node<T> {
  * performance-efficient way, as
  * in Java with ArrayList
  */
-export class LinkedList<T> {
+export class LinkedList<T> implements Iterable<Node<T> | null> {
 
-    static clone(list) {
+    static clone(list: LinkedList<unknown>) {
         const cloned = new LinkedList();
         cloned.list = Array.from(list.list, (node: Node<unknown>) => {
             const clonedNode = new Node(node.element);
             return clonedNode;
         });
         for (let i = 0; i < cloned.list.length; i++) {
-            cloned.list[i].next = cloned.list[i+1] ? cloned.list[i+1] : null;
+            cloned.list[i]!.next = cloned.list[i+1] ? cloned.list[i+1] : null;
         }
-        cloned.head = cloned.list[0] ? cloned.list[0] : null;
+        cloned.head = cloned.list[0]
         cloned.size = list.size;
 
         return cloned;
     }
 
-    static fromArray(arr = []) {
-        const list = new LinkedList();
+    static fromArray<T>(arr: Array<T> = []) {
+        const list = new LinkedList<T>();
         for (let i = 0; i < arr.length; i++) {
-            list.add(arr[i]);
+            arr[i] && list.add(arr[i]);
         }
         return list;
     }
 
-    list: Array<Node<T>> | null
-    head: Node<T> | null
+    list: Array<Node<T>> = []
+    head: Node<T> | null = null
     size: number
 
     constructor()
     {
-        this.list = null;
-        this.head = null;
         this.size = 0;
+    }
+
+    *[Symbol.iterator](): Iterator<Node<T>, Node<T> | null, undefined> {
+        if (this.list) {
+            for (let element of this.list) {
+                yield element
+            }
+        }
+        return null
+    }
+
+    map(callback: (element: T | null) => unknown) {
+        let result: Array<unknown> | null = null
+        if (this.size > 0) {
+            result = []
+        }
+        for (let node of this) {
+            result?.push(callback(node?.element ?? null))
+        }
+
+        return result
     }
 
     /**
      * Adds a new element to the list
      * @param {any} element
      */
-    add(element: Node<T> | T)
+    add(element: Node<T> | T ): LinkedList<T>
     {
         // creates a new node
         const node = !(element instanceof Node) ? new Node(element) : element;
@@ -66,10 +89,12 @@ export class LinkedList<T> {
             this.list = [node];
             this.head = node;
         } else {
-            this.list![this.list!.length - 1].next = node
+            this.list![this.list!.length - 1]!.next = node
             this.list!.push(node);
         }
         this.size++;
+
+        return this
     }
 
     /**
@@ -87,8 +112,10 @@ export class LinkedList<T> {
             // creates a new node
             const node = !(element instanceof Node) ? new Node(element) : element;
 
-            const previous = this.list![index - 1] ? this.list![index -1] : null; // first element?
-            const next = this.list![index + 1] ? this.list![index + 1] : null; // last element?
+            if (!this.list) this.list = []
+
+            const previous = this.list?.[index - 1] ? this.list![index -1] : null; // first element?
+            const next = this.list?.[index + 1] ? this.list![index + 1] : null; // last element?
 
             if (previous) { // is not the first element
                 previous.next = node;
@@ -129,7 +156,7 @@ export class LinkedList<T> {
             this.size--;
 
             // return the removed element
-            return node.element;
+            return node?.element;
         }
     }
 
@@ -147,7 +174,24 @@ export class LinkedList<T> {
      * @returns the first element in the linked list
      */
     peek() {
-        return this.head?.element
+        return this.head
+    }
+
+    /**
+     * Removes and returns the last element in the list
+     * @returns the last element of the list
+     */
+    pop() {
+        if (this.isEmpty()) return null
+        return this.removeFrom(this.size)
+    }
+    /**
+     * Returns the last element in the list
+     * @returns the last element in the linked list
+     */
+    peekLast() {
+        if (this.isEmpty()) return null
+        return this.list?.[this.size -1]
     }
 
     /**
@@ -172,7 +216,17 @@ export class LinkedList<T> {
      */
     indexOf(element: T)
     {
-        return this.list?.findIndex(node => node.element === element) ?? -1;
+        return this.list?.findIndex(node => node?.element === element) ?? -1;
+    }
+
+    /**
+     * Finds the element at a given position
+     * @param {any} index
+     * @returns the element of the given index, null if not found
+     */
+    elementAt(index)
+    {
+        return this.list?.[index]?.element ?? null;
     }
 
     /**
@@ -199,7 +253,7 @@ export class LinkedList<T> {
     {
         let str = '[';
         for (let i = 0; i < this.size; i++) {
-            str += this.list![i].element + " ";
+            str += `${this.list![i]?.toString()}${i + 1 < this.size ? ', ' : ' '}`;
         }
         str = str.trim();
         str += ']';
@@ -208,6 +262,8 @@ export class LinkedList<T> {
         }
         console.log(str);
     }
+
+    toString = () => this.printList(true) ?? ''
 
     /**
      *
